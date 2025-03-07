@@ -1,0 +1,20 @@
+package com.aurionpro.crud.service;
+
+import java.util.List;
+
+import com.aurionpro.crud.entity.Student;
+import com.aurionpro.crud.repository.StudentRepository;
+
+public class StudentServiceImpl implements StudentService
+{
+
+	private StudentRepository studentRepo;
+	
+	@Override
+	public List<Student> getAllStudents() 
+	{
+		List<Student> students = studentRepo.findAll();
+		return null;
+	}
+	
+}

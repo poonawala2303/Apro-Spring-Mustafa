@@ -1,0 +1,5 @@
+package com.aurionpro.crud.entity;
+
+public class Account {
+
+}

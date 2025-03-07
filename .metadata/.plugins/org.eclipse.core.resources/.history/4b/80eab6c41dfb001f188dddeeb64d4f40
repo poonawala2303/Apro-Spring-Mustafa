@@ -1,0 +1,6 @@
+package com.aurionpro.crud.controller;
+
+public class StudentController 
+{
+	
+}

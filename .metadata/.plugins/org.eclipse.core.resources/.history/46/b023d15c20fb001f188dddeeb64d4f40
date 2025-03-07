@@ -1,0 +1,10 @@
+package com.aurionpro.crud.entity;
+
+public class Account 
+{
+	private int accountId;
+	private String accountNumber;
+	private String name;
+	private int balance;
+	
+}

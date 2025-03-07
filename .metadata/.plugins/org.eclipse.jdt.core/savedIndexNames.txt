@@ -1,0 +1,5 @@
+INDEX VERSION 1.134+D:\AurionPro_Mustafa_Spring\.metadata\.plugins\org.eclipse.jdt.core
+1348094112.index
+1865797976.index
+28940705.index
+3203367568.index

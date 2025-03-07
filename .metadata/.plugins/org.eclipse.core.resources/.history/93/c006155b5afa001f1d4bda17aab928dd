@@ -1,0 +1,6 @@
+package com.aurionpro.spring.entity;
+
+public class Harddisk 
+{
+	
+}

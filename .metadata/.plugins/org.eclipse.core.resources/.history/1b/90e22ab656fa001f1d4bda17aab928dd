@@ -1,0 +1,5 @@
+package com.aurionpro.spring.controller;
+
+public class SayHelloController {
+
+}

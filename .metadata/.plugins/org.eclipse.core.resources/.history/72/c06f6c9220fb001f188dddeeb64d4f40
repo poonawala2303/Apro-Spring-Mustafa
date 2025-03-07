@@ -1,0 +1,14 @@
+package com.aurionpro.crud.entity;
+
+import jakarta.persistence.Entity;
+
+@Entity
+@Table(name="accounts")
+public class Account 
+{
+	private int accountId;
+	private String accountNumber;
+	private String name;
+	private int balance;
+	
+}

@@ -1,0 +1,22 @@
+package com.aurionpro.spring.entity;
+
+public class Computer 
+{
+	
+	public String name;
+	public Harddisk harddisk;
+	
+	public Computer() {
+		super();
+	}
+
+	public Computer(String name, Harddisk harddisk) {
+		super();
+		this.name = name;
+		this.harddisk = harddisk;
+	}
+	
+	
+	
+	
+}

@@ -1,0 +1,6 @@
+package com.aurionpro.crud.repository;
+
+public interface AccountRepo 
+{
+	
+}
