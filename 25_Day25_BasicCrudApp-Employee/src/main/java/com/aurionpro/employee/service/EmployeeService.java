@@ -2,9 +2,17 @@ package com.aurionpro.employee.service;
 
 import java.util.List;
 
+import com.aurionpro.employee.dto.PageResponse;
 import com.aurionpro.employee.entity.Employee;
 
 public interface EmployeeService 
 {
-	public List<Employee> getAllEmployees();
+	
+//	public Page<Employee> getAllEmployees(int pageNumber , int pageSize);
+	public PageResponse<Employee> getAllEmployees(int pageNumber , int pageSize);
+	Employee addEmployee(Employee employee);
+	void deleteEmployee(Employee employee);
+	Employee getAStudent(int employeeId);
+	
+	List<Employee> getEmployeeByName(String name);
 }
