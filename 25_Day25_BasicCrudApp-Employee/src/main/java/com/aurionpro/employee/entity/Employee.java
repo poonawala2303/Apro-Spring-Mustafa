@@ -6,53 +6,37 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 @Entity
 @Table(name="employees")
+@AllArgsConstructor
+@RequiredArgsConstructor
+@Data
+
 public class Employee
 {
+	
 	@Column(name="employeeId")
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int employeeId;
 	@Column(name="name")
+	@NotBlank(message = "Name must not be blank")
 	private String name;
 	@Column(name="salary")
+	@Min(value = 15000)
+	@Max(value = 700000)
 	private int salary;
 	
-	public Employee() {
-		super();
-	}
-
-	public Employee(int employeeId, String name, int salary) {
-		super();
-		this.employeeId = employeeId;
-		this.name = name;
-		this.salary = salary;
-	}
-
-	public int getEmployeeId() {
-		return employeeId;
-	}
-
-	public void setEmployeeId(int employeeId) {
-		this.employeeId = employeeId;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public int getSalary() {
-		return salary;
-	}
-
-	public void setSalary(int salary) {
-		this.salary = salary;
-	}
+	
 	
 }
