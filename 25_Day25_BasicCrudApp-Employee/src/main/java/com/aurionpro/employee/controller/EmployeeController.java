@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aurionpro.employee.dto.PageResponse;
+import com.aurionpro.employee.dto.StudentDto;
 import com.aurionpro.employee.entity.Employee;
 import com.aurionpro.employee.service.EmployeeService;
 
@@ -37,8 +38,14 @@ public class EmployeeController
 //		return ResponseEntity.ok(empService.getAllEmployees(pageNumber,pageSize));
 //	}
 	
+//	@GetMapping("/employee")
+//	public ResponseEntity<PageResponse<Employee>> getAllEmployee(@RequestParam int pageNumber , @RequestParam int pageSize , @RequestParam(required = false) String name)
+//	{
+//		return ResponseEntity.ok(empService.getAllEmployees(pageNumber,pageSize,name));
+//	}
+	
 	@GetMapping("/employee")
-	public ResponseEntity<PageResponse<Employee>> getAllEmployee(@RequestParam int pageNumber , @RequestParam int pageSize , @RequestParam(required = false) String name)
+	public ResponseEntity<PageResponse<StudentDto>> getAllEmployee(@RequestParam int pageNumber , @RequestParam int pageSize , @RequestParam(required = false) String name)
 	{
 		return ResponseEntity.ok(empService.getAllEmployees(pageNumber,pageSize,name));
 	}

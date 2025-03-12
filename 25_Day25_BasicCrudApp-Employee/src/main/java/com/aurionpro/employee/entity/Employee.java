@@ -1,10 +1,15 @@
 package com.aurionpro.employee.entity;
 
+import org.hibernate.annotations.Cascade;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -37,6 +42,9 @@ public class Employee
 	@Max(value = 700000)
 	private int salary;
 	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "addreddId")
+	private Address address;
 	
 	
 }

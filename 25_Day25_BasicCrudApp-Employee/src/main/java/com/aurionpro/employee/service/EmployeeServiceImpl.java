@@ -1,7 +1,8 @@
 package com.aurionpro.employee.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.aurionpro.employee.dto.PageResponse;
+import com.aurionpro.employee.dto.StudentDto;
 import com.aurionpro.employee.entity.Employee;
 import com.aurionpro.employee.exception.StudentApiException;
 import com.aurionpro.employee.repository.EmployeeRepository;
@@ -52,8 +54,36 @@ public class EmployeeServiceImpl implements EmployeeService {
 //		return pageResponse;
 //	}
 	
+//	@Override
+//	public PageResponse<Employee> getAllEmployees(int pageNumber ,int pageSize,String name) 
+//	{
+//		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+//		Page<Employee> employees = null;
+//		
+//		if (name == null)
+//		{
+//			employees = empRepo.findAll(pageable);
+//		}
+//		
+//		if(name!=null)
+//		{
+//			employees = empRepo.findByName(name,pageable);
+//					
+//		}
+//		
+//		PageResponse<Employee> pageResponse = new PageResponse<>();
+//		
+//		pageResponse.setPageSize(employees.getSize());
+//		pageResponse.setLast(employees.isLast());
+//		pageResponse.setTotalElements(employees.getTotalElements());
+//		pageResponse.setTotalPages(employees.getTotalPages());
+//		pageResponse.setContent(employees.getContent());
+//		
+//		return pageResponse;
+//	}
+	
 	@Override
-	public PageResponse<Employee> getAllEmployees(int pageNumber ,int pageSize,String name) 
+	public PageResponse<StudentDto> getAllEmployees(int pageNumber ,int pageSize,String name) 
 	{
 		Pageable pageable = PageRequest.of(pageNumber, pageSize);
 		Page<Employee> employees = null;
@@ -69,15 +99,38 @@ public class EmployeeServiceImpl implements EmployeeService {
 					
 		}
 		
-		PageResponse<Employee> pageResponse = new PageResponse<>();
+		
+		List<Employee> dbEmp = employees.getContent();
+		
+		List<StudentDto> studDto = new ArrayList<>();
+		
+		for(Employee employee: dbEmp)
+		{
+			studDto.add(studentToStudentDtoMapper(employee));
+		}
+		
+		
+		PageResponse<StudentDto> pageResponse = new PageResponse<>();
 		
 		pageResponse.setPageSize(employees.getSize());
 		pageResponse.setLast(employees.isLast());
 		pageResponse.setTotalElements(employees.getTotalElements());
 		pageResponse.setTotalPages(employees.getTotalPages());
-		pageResponse.setContent(employees.getContent());
+//		pageResponse.setContent(employees.getContent());
+		pageResponse.setContent(studDto);
 		
 		return pageResponse;
+	}
+	
+	public StudentDto studentToStudentDtoMapper(Employee employee)
+	{
+		StudentDto dto = new StudentDto();
+		
+		dto.setEmployeeId(employee.getEmployeeId());
+		dto.setName(employee.getName());
+		dto.setSalary(employee.getSalary());
+		
+		return dto;
 	}
 
 	@Override
