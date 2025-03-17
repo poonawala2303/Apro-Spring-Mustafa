@@ -1,6 +1,6 @@
 package com.aurionpro.employee.entity;
 
-import org.hibernate.annotations.Cascade;
+import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -9,14 +9,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +44,10 @@ public class Employee
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "addreddId")
 	private Address address;
+	
+	@ManyToMany
+	@JoinTable(name = "student-course", joinColumns = @JoinColumn (name="studentId") , inverseJoinColumns = @JoinColumn (name="courseId"))
+	private List<Course> courses;
 	
 	
 }

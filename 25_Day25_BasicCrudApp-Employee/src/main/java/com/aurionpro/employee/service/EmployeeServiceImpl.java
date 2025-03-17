@@ -14,8 +14,10 @@ import org.springframework.stereotype.Service;
 
 import com.aurionpro.employee.dto.PageResponse;
 import com.aurionpro.employee.dto.StudentDto;
+import com.aurionpro.employee.entity.Course;
 import com.aurionpro.employee.entity.Employee;
 import com.aurionpro.employee.exception.StudentApiException;
+import com.aurionpro.employee.repository.CourseRepository;
 import com.aurionpro.employee.repository.EmployeeRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	private EmployeeRepository empRepo;
+	
+	@Autowired
+	public CourseRepository courseRepository;
 	
 	private static final Logger log = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 	
@@ -156,6 +161,35 @@ public class EmployeeServiceImpl implements EmployeeService {
 		if(empRecord.isEmpty())
 			throw new StudentApiException("Employee dosent exist");
 		return empRecord.get();
+	}
+
+	@Override
+	public StudentDto assignCourses(int studentId, List<Integer> courseIds) {
+		
+		Employee employeeDb = empRepo.findById(studentId).orElseThrow(
+				()-> new RuntimeException("Employee with id - " + studentId + " does not exist"));
+		
+		List<Course> coursesOf = new ArrayList<>();
+		
+		for(Integer courseId : courseIds)
+		{
+			Course dbCourse = courseRepository.findById(courseId)
+					.orElseThrow(()-> new RuntimeException("Course with id - " + courseId + " does not exist"));
+			
+			List<Employee> dbStudents = dbCourse.getEmployees();
+			dbStudents.add(employeeDb);
+			
+			Course course = courseRepository.save(dbCourse);
+			
+			coursesOf.add(course);
+		}
+		
+		employeeDb.getCourses().addAll(coursesOf);
+		
+		
+		
+		return studentToStudentDtoMapper(empRepo.save(employeeDb));
+		
 	}
 
 //	@Override

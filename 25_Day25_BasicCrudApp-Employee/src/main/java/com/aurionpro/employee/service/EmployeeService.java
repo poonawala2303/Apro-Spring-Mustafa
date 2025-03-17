@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.aurionpro.employee.dto.PageResponse;
 import com.aurionpro.employee.dto.StudentDto;
+import com.aurionpro.employee.entity.Course;
 import com.aurionpro.employee.entity.Employee;
 
 public interface EmployeeService 
@@ -17,6 +18,9 @@ public interface EmployeeService
 	Employee addEmployee(Employee employee);
 	void deleteEmployee(Employee employee);
 	Employee getAStudent(int employeeId);
+	
+	StudentDto assignCourses(int studentId, List<Integer> courseIds);
+	
 	
 //	List<Employee> getEmployeeByName(String name);
 }

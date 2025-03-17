@@ -1,5 +1,7 @@
 package com.aurionpro.employee.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -72,6 +74,12 @@ public class EmployeeController
 	public ResponseEntity<Employee> getAEmployeeRecord(@PathVariable int employeeId)
 	{
 		return ResponseEntity.ok(empService.getAStudent(employeeId));
+	}
+	
+	@PutMapping("/employee/{employeeId}")
+	public ResponseEntity<StudentDto> assignCourses(@PathVariable int employeeId , @RequestBody List<Integer> courseIds)
+	{
+		return ResponseEntity.ok(empService.assignCourses(employeeId, courseIds));
 	}
 	
 	
