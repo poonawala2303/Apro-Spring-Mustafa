@@ -10,8 +10,6 @@ public interface UserService
 {
 	UserResponseDto addUser(UserRequestDto userRequest);
 	PageResponse<UserResponseDto> getAllUsers(int pageSize , int pageNumber);
-	
 	void deleteUser(int id) throws UserNotFoundException;
-	
 	void deleteAllUsers();
 }

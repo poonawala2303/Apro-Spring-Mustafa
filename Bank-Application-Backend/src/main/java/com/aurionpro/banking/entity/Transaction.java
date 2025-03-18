@@ -27,26 +27,21 @@ public class Transaction
 	@Column
 	private int id;
 	
-	@NotBlank(message = "Sender account number is required")
-    @Column(nullable = false, length = 10)
+    @Column(name="sender_accno")
     private String senderAccno;
 
-    @Column(length = 10)
+    @Column(name="reciever_accno")
     private String receiverAccno;
 	
-    @Min(value = 1, message = "Amount must be at least 1")
-	@Column
+	@Column(name="amount")
     private double amount;
-	
-    @NotBlank(message = "Transaction type is required")
-	@Column
+
+	@Column(name="transaction_type")
     private String transactionType; 
 	
-    @NotBlank(message = "Description is required")
-    @Size(max = 255, message = "Description cannot exceed 255 characters")
-    @Column
+    @Column(name="description")
     private String description;
     
-	@Column
+	@Column(name="timestamp")
     private LocalDateTime timestamp;
 }

@@ -1,6 +1,7 @@
 package com.aurionpro.banking.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,13 +17,23 @@ import com.aurionpro.banking.dto.AccountRequestDto;
 import com.aurionpro.banking.dto.AccountResponseDto;
 import com.aurionpro.banking.dto.PageResponse;
 import com.aurionpro.banking.entity.Account;
+import com.aurionpro.banking.entity.ApiMessages;
+import com.aurionpro.banking.entity.Transaction;
+import com.aurionpro.banking.exception.InvalidAmountException;
 import com.aurionpro.banking.repository.AccountRepository;
+import com.aurionpro.banking.repository.TransactionRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService
 {
 	@Autowired
 	private AccountRepository accountRepository;
+	
+	@Autowired
+	private TransactionRepository transactionRepository;
 
 	@Override
 	public AccountResponseDto addAccount(AccountRequestDto accountRequest) 
@@ -103,6 +114,69 @@ public class AccountServiceImpl implements AccountService
 		
 		accountRepository.deleteById(id);
 		
+	}
+	
+	private void validateAmount(double amount) 
+	{
+        if (amount <= 0) {
+            throw new InvalidAmountException(ApiMessages.AMOUNT_NEGATIVE_ERROR.getMessage());
+        }
+
+        if (amount % 100 != 0) {
+            throw new InvalidAmountException(ApiMessages.AMOUNT_NOT_MULTIPLE_OF_100_ERROR.getMessage());
+        }
+
+        if (amount > 100000) {
+            throw new InvalidAmountException(ApiMessages.AMOUNT_EXCEED_100_000_ERROR.getMessage());
+        }
+    }
+
+	@Override
+	public AccountResponseDto cashDeposit(int id, double amount) throws AccountNotFoundException 
+	{
+		validateAmount(amount);
+		
+		Account dbAccount = accountRepository.findById(id).orElseThrow(()-> new AccountNotFoundException());
+		
+		double total = dbAccount.getBalance() + amount;
+		dbAccount.setBalance(total);
+		
+		Account savedAccount = accountRepository.save(dbAccount);
+		
+		Transaction transaction = new Transaction();
+		transaction.setSenderAccno(dbAccount.getAccountNumber());
+	    transaction.setAmount(amount);
+	    transaction.setTransactionType("deposit");
+	    transactionRepository.save(transaction);
+		
+		return accountToResponseDtoMapper(savedAccount);
+		
+	}
+
+	@Override
+	public AccountResponseDto cashWithdrawl(int id, double amount) throws AccountNotFoundException 
+	{
+		validateAmount(amount);
+		
+		Account dbAccount = accountRepository.findById(id).orElseThrow(()-> new AccountNotFoundException());
+		
+		if(dbAccount.getBalance() < amount)
+		{
+			throw new RuntimeException("Insufficient amount in given account");
+		}
+		
+		double total = dbAccount.getBalance() - amount;
+		dbAccount.setBalance(total);
+		
+		Account savedAccount = accountRepository.save(dbAccount);
+		
+		Transaction transaction = new Transaction();
+		transaction.setSenderAccno(dbAccount.getAccountNumber());
+	    transaction.setAmount(amount);
+	    transaction.setTransactionType("withdrawl");
+	    transactionRepository.save(transaction);
+		
+		return accountToResponseDtoMapper(savedAccount);
 	}
 	
 }

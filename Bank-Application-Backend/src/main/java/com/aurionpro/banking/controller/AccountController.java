@@ -52,4 +52,16 @@ public class AccountController
 		return ResponseEntity.ok("Account with id " + id + " deleted successfully");
 	}
 	
+	 @PostMapping("/deposit/{id}")
+	 public ResponseEntity<AccountResponseDto> cashDeposit(@PathVariable int id,@RequestParam double amount) throws AccountNotFoundException
+	 {
+		 return ResponseEntity.ok(accountService.cashDeposit(id, amount));
+	 }
+	 
+	 @PostMapping("/withdraw/{id}")
+	 public ResponseEntity<AccountResponseDto> cashWithdrawl(@PathVariable int id,@RequestParam double amount) throws AccountNotFoundException
+	 {
+		 return ResponseEntity.ok(accountService.cashWithdrawl(id, amount));
+	 }
+	
 }
