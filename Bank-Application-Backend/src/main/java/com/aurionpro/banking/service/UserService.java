@@ -1,9 +1,10 @@
 package com.aurionpro.banking.service;
 
+import java.util.List;
+
 import com.aurionpro.banking.dto.PageResponse;
 import com.aurionpro.banking.dto.UserRequestDto;
 import com.aurionpro.banking.dto.UserResponseDto;
-import com.aurionpro.banking.entity.User;
 import com.aurionpro.banking.exception.UserNotFoundException;
 
 public interface UserService 
@@ -12,4 +13,5 @@ public interface UserService
 	PageResponse<UserResponseDto> getAllUsers(int pageSize , int pageNumber);
 	void deleteUser(int id) throws UserNotFoundException;
 	void deleteAllUsers();
+	UserResponseDto assignAccounts(int userId , List<Integer> accountIds);
 }

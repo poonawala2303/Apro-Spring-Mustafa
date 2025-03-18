@@ -14,8 +14,10 @@ import org.springframework.stereotype.Service;
 import com.aurionpro.banking.dto.PageResponse;
 import com.aurionpro.banking.dto.UserRequestDto;
 import com.aurionpro.banking.dto.UserResponseDto;
+import com.aurionpro.banking.entity.Account;
 import com.aurionpro.banking.entity.User;
 import com.aurionpro.banking.exception.UserNotFoundException;
+import com.aurionpro.banking.repository.AccountRepository;
 import com.aurionpro.banking.repository.UserRepository;
 
 @Service
@@ -23,6 +25,9 @@ public class UserServiceImpl implements UserService
 {
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private AccountRepository accountRepository;
 	
 	private ModelMapper mapper;
 
@@ -77,6 +82,32 @@ public class UserServiceImpl implements UserService
 	public void deleteAllUsers() 
 	{
 		userRepository.deleteAll();	
+	}
+
+	@Override
+	public UserResponseDto assignAccounts(int userId, List<Integer> accountIds) {
+		
+		Optional<User> dbUser = userRepository.findById(userId);
+		
+		if(dbUser.isEmpty())
+			throw new RuntimeException("User with user id -"+userId + " does not exist");
+		
+		User user = dbUser.get();
+		
+		List<Account> accounts = new ArrayList<>();
+		
+		for(Integer accountId : accountIds)
+		{
+			Account account = accountRepository.findById(accountId)
+					.orElseThrow(()-> new RuntimeException("Account with id - " + accountId + " does not exist"));
+			
+			account.setUser(user);
+			Account dbAccount = accountRepository.save(account);
+			accounts.add(dbAccount);
+					
+		}
+		
+		return mapper.map(userRepository.save(user),UserResponseDto.class);
 	}
 
 }

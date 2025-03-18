@@ -1,5 +1,7 @@
 package com.aurionpro.banking.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -54,6 +56,12 @@ public class UserController
 		userService.deleteAllUsers();
 		
 		return ResponseEntity.ok("All users deleted");
+	}
+	
+	@PutMapping("/assignAccounts/{userId}")
+	public ResponseEntity<UserResponseDto> assignAccounts(@PathVariable int userId, @RequestBody List<Integer> accountIds)
+	{
+		return ResponseEntity.ok(userService.assignAccounts(userId, accountIds));
 	}
 	
 }

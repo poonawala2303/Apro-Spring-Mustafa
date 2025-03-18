@@ -17,7 +17,10 @@ import com.aurionpro.banking.dto.AccountRequestDto;
 import com.aurionpro.banking.dto.AccountResponseDto;
 import com.aurionpro.banking.dto.PageResponse;
 import com.aurionpro.banking.entity.Account;
+import com.aurionpro.banking.entity.EmailDetails;
 import com.aurionpro.banking.service.AccountService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("bankapp/account")
@@ -27,7 +30,7 @@ public class AccountController
 	private AccountService accountService;
 	
 	@PostMapping("/addaccount")
-	public ResponseEntity<AccountResponseDto> addAccount(@RequestBody AccountRequestDto accountRequest)
+	public ResponseEntity<AccountResponseDto> addAccount(@RequestBody @Valid AccountRequestDto accountRequest)
 	{
 		return ResponseEntity.ok(accountService.addAccount(accountRequest));
 	}
@@ -63,5 +66,20 @@ public class AccountController
 	 {
 		 return ResponseEntity.ok(accountService.cashWithdrawl(id, amount));
 	 }
-	
+	 
+	 @PostMapping("fundTransfer/{srcAccId}/to/{destAccId}")
+	 public ResponseEntity<String> fundTransfer(@PathVariable int srcAccId , @PathVariable int destAccId , @RequestParam double amount) throws AccountNotFoundException
+	 {
+		 accountService.fundTransfer(srcAccId, destAccId, amount);
+		 
+		 return ResponseEntity.ok("Fund Transfer Successfull");
+	 }
+	 
+	 @PostMapping("/sendMail")
+	 public ResponseEntity<String> sendMail(@RequestBody EmailDetails details)
+	    {
+	        String status= accountService.sendMail(details);
+
+	        return ResponseEntity.ok("Mail sent");
+	    }
 }
