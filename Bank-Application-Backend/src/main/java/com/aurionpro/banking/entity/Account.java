@@ -33,4 +33,7 @@ public class Account
 	@ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+	
+	@Column(name="is_deleted")
+	private Boolean isDeleted = false;
 }

@@ -10,13 +10,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.service.annotation.DeleteExchange;
 
 import com.aurionpro.banking.dto.PageResponse;
 import com.aurionpro.banking.dto.TransactionRequestDto;
 import com.aurionpro.banking.dto.TransactionResponseDto;
-import com.aurionpro.banking.dto.UserRequestDto;
-import com.aurionpro.banking.dto.UserResponseDto;
 import com.aurionpro.banking.service.TransactionService;
 
 @RestController
@@ -26,24 +23,24 @@ public class TransactionController
 	@Autowired
 	private TransactionService transactionService;
 	
-	@PostMapping("/addTransaction")
+	@PostMapping("/transactions")
 	public ResponseEntity<TransactionResponseDto> addTransaction(@RequestBody TransactionRequestDto transactionRequest)
 	{
 		return ResponseEntity.ok(transactionService.addTransaction(transactionRequest));
 	}
 	
-	@GetMapping("/getTransaction")
+	@GetMapping("/transactions")
 	public ResponseEntity<PageResponse<TransactionResponseDto>> getAllTransactions(int pageSize , int pageNumber)
 	{
 		return ResponseEntity.ok(transactionService.getAllTransactions(pageSize, pageNumber));
 	}
 	
-	@PutMapping("/updateTransaction")
+	@PutMapping("/transactions")
 	public ResponseEntity<TransactionResponseDto> updateTransaction(@RequestBody TransactionRequestDto transactionRequest) {
 		return ResponseEntity.ok(transactionService.addTransaction(transactionRequest));
 	}
 	
-	@DeleteMapping("deleteTransaction/{id}")
+	@DeleteMapping("/transactions/{id}")
 	public ResponseEntity<String> deleteTransactinById(@PathVariable int id)
 	{
 		transactionService.deleteTransactionById(id);
@@ -51,7 +48,7 @@ public class TransactionController
 		return ResponseEntity.ok("Transaction with id - "+id+" deleted");
 	}
 	
-	@DeleteMapping("deleteAllTransactions")
+	@DeleteMapping("/transactions")
 	public ResponseEntity<String> deleteAllTransactions()
 	{
 		transactionService.deleteAllTransactions();

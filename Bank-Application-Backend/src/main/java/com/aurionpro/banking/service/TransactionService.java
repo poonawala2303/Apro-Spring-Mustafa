@@ -9,6 +9,6 @@ public interface TransactionService
 {
 	TransactionResponseDto addTransaction(TransactionRequestDto transactionRequest);
 	PageResponse<TransactionResponseDto> getAllTransactions (int pageSize , int pageNumber);
-	void deleteTransactionById(int id) throws TransactionNotFoundException;
+	String deleteTransactionById(int id) throws TransactionNotFoundException;
 	void deleteAllTransactions();
 }

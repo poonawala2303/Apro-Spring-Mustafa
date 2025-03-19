@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aurionpro.banking.dto.PageResponse;
 import com.aurionpro.banking.dto.UserRequestDto;
 import com.aurionpro.banking.dto.UserResponseDto;
+import com.aurionpro.banking.entity.User;
 import com.aurionpro.banking.service.UserService;
 
 @RestController
@@ -25,24 +27,24 @@ public class UserController
 	@Autowired
 	private UserService userService;
 	
-	@PostMapping("/addUser")
+	@PostMapping("/users")
 	public ResponseEntity<UserResponseDto> addUser(@RequestBody UserRequestDto userRequest)
 	{
 		return ResponseEntity.ok(userService.addUser(userRequest));
 	}
 	
-	@GetMapping("/getAllUsers")
+	@GetMapping("/users")
 	public ResponseEntity<PageResponse<UserResponseDto>> getAllUsers(int pageSize , int pageNumber)
 	{
 		return ResponseEntity.ok(userService.getAllUsers(pageSize, pageNumber));
 	}
 	
-	@PutMapping("/updateUser")
+	@PutMapping("/users")
 	public ResponseEntity<UserResponseDto> updateUser(@RequestBody UserRequestDto userRequest) {
 		return ResponseEntity.ok(userService.addUser(userRequest));
 	}
 
-	@DeleteMapping("/deleteUser/{id}")
+	@DeleteMapping("/users/{id}")
 	public ResponseEntity<String> deleteUser(@PathVariable int id) 
 	{
 		userService.deleteUser(id);
@@ -50,7 +52,7 @@ public class UserController
 		return ResponseEntity.ok("User with id " + id + " deleted successfully");
 	}
 	
-	@DeleteMapping("/deleteAllUsers")
+	@DeleteMapping("/users")
 	public ResponseEntity<String> deleteAllUsers()
 	{
 		userService.deleteAllUsers();
@@ -58,7 +60,7 @@ public class UserController
 		return ResponseEntity.ok("All users deleted");
 	}
 	
-	@PutMapping("/assignAccounts/{userId}")
+	@PutMapping("/users/{userId}")
 	public ResponseEntity<UserResponseDto> assignAccounts(@PathVariable int userId, @RequestBody List<Integer> accountIds)
 	{
 		return ResponseEntity.ok(userService.assignAccounts(userId, accountIds));

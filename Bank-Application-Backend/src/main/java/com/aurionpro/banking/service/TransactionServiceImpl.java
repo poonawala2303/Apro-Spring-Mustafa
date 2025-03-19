@@ -18,7 +18,10 @@ import com.aurionpro.banking.entity.Transaction;
 import com.aurionpro.banking.exception.TransactionNotFoundException;
 import com.aurionpro.banking.repository.TransactionRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class TransactionServiceImpl implements TransactionService
 {
 	@Autowired
@@ -68,11 +71,18 @@ public class TransactionServiceImpl implements TransactionService
 	}
 
 	@Override
-	public void deleteTransactionById(int id) throws TransactionNotFoundException 
+	public String deleteTransactionById(int id) throws TransactionNotFoundException 
 	{
-		Optional.ofNullable(transactionRepo.findById(id).orElseThrow(()->
-		new TransactionNotFoundException("Transaction with id - " +id + " dosent exist")));
-		transactionRepo.deleteById(id);
+//		Optional.ofNullable(transactionRepo.findById(id).orElseThrow(()->
+//		new TransactionNotFoundException("Transaction with id - " +id + " dosent exist")));
+		
+		Transaction transaction = transactionRepo.findById(id)
+	            .orElseThrow(() -> new TransactionNotFoundException("Transaction with id - \" +id + \" dosent exist"));
+		
+		transaction.setIsDeleted(true);
+	    transactionRepo.save(transaction);
+	    return "Transaction marked as deleted.";
+		
 	}
 
 	@Override

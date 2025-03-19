@@ -32,7 +32,7 @@ public class User
 	@NotBlank(message = "Name is compulsory")
 	private String name;
 	
-	@Column(name="username")
+	@Column(name="username",unique = true)
 	@NotBlank(message = "Username is compulsory")
 	private String username;
 	
@@ -49,4 +49,7 @@ public class User
 	
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Account> accounts;
+	
+	@Column(name="is_deleted")
+	private Boolean isDeleted = false;
 }

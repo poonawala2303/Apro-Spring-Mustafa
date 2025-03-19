@@ -20,7 +20,10 @@ import com.aurionpro.banking.exception.UserNotFoundException;
 import com.aurionpro.banking.repository.AccountRepository;
 import com.aurionpro.banking.repository.UserRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService
 {
 	@Autowired
@@ -70,12 +73,19 @@ public class UserServiceImpl implements UserService
 	}
 
 	@Override
-	public void deleteUser(int id) throws UserNotFoundException
+	public String deleteUser(int id) throws UserNotFoundException
 	{
-		Optional.ofNullable(userRepository.findById(id).orElseThrow(()->
-		new UserNotFoundException("User with id - " +id + " dosent exist")));
+//		Optional.ofNullable(userRepository.findById(id).orElseThrow(()->
+//		new UserNotFoundException("User with id - " +id + " dosent exist")));
+//		
+//		userRepository.deleteById(id);
 		
-		userRepository.deleteById(id);
+		User user = userRepository.findById(id)
+		            .orElseThrow(() -> new UserNotFoundException("User with id - \" +id + \" dosent exist"));
+
+		user.setIsDeleted(true);
+		userRepository.save(user);
+		return "User marked as deleted.";
 	}
 
 	@Override

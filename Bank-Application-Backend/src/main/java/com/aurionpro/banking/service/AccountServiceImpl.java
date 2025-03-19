@@ -3,6 +3,7 @@ package com.aurionpro.banking.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDateTime;
 
 import javax.security.auth.login.AccountNotFoundException;
 
@@ -30,9 +31,11 @@ import com.aurionpro.banking.repository.TransactionRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AccountServiceImpl implements AccountService
 {
 	@Autowired
@@ -118,13 +121,20 @@ public class AccountServiceImpl implements AccountService
 	}
 
 	@Override
-	public void deleteAccount(int id) throws AccountNotFoundException
+	public String deleteAccount(int id) throws AccountNotFoundException
 	{
-		Optional.ofNullable(accountRepository.findById(id).orElseThrow(()->
-		new AccountNotFoundException("Account with id - " +id + " dosent exist")));
-//		accountRepository.findAll();
+//		Optional.ofNullable(accountRepository.findById(id).orElseThrow(()->
+//		new AccountNotFoundException("Account with id - " +id + " dosent exist")));
+////		accountRepository.findAll();
+//		
+//		accountRepository.deleteById(id);
 		
-		accountRepository.deleteById(id);
+		Account account = accountRepository.findById(id)
+	            .orElseThrow(() -> new AccountNotFoundException("Account with id - \" +id + \" dosent exist"));
+
+	    account.setIsDeleted(true);
+	    accountRepository.save(account);
+	    return "Account marked as deleted.";
 		
 	}
 	
@@ -181,16 +191,18 @@ public class AccountServiceImpl implements AccountService
 		Account savedAccount = accountRepository.save(dbAccount);
 		
 		Transaction transaction = new Transaction();
-		transaction.setSenderAccno(dbAccount.getAccountNumber());
+		transaction.setSenderAccount(dbAccount);
 	    transaction.setAmount(amount);
 	    transaction.setTransactionType("deposit");
+	    transaction.setTimestamp(LocalDateTime.now());
+
 	    transactionRepository.save(transaction);
 	    
 	    EmailDetails details = new EmailDetails();
 	    details.setMsgBody("Dear Customer,\n\nYour deposit of " + amount + " has been successfully credited.\n" +
                 "New Balance: " + total + "\n\nThank you for banking with us!");
 	    details.setSubject("Deposit Notification");
-	    details.setRecipient("poonawala2303@gmail.com");
+	    details.setRecipient(dbAccount.getUser().getEmail());
 	    
 	    sendMail(details);
 	    
@@ -217,16 +229,18 @@ public class AccountServiceImpl implements AccountService
 		Account savedAccount = accountRepository.save(dbAccount);
 		
 		Transaction transaction = new Transaction();
-		transaction.setSenderAccno(dbAccount.getAccountNumber());
+		transaction.setSenderAccount(dbAccount);
 	    transaction.setAmount(amount);
 	    transaction.setTransactionType("withdrawl");
+	    transaction.setTimestamp(LocalDateTime.now());
+	    
 	    transactionRepository.save(transaction);
 	    
 	    EmailDetails details = new EmailDetails();
 	    details.setMsgBody("Dear Customer,\n\nYour withdrawl of " + amount + " has been debited.\n" +
                 "New Balance: " + total + "\n\nThank you for banking with us!");
 	    details.setSubject("Withdrawl Notification");
-	    details.setRecipient("poonawala2303@gmail.com");
+	    details.setRecipient(dbAccount.getUser().getEmail());
 	    
 	    sendMail(details);
 		
@@ -265,11 +279,33 @@ public class AccountServiceImpl implements AccountService
 				 
 		Transaction transaction = new Transaction();
 		transaction.setAmount(amount);
-		transaction.setSenderAccno(srcAccount.getAccountNumber());
-		transaction.setReceiverAccno(destAccount.getAccountNumber());
+		transaction.setSenderAccount(srcAccount);
+		transaction.setReceiverAccount(destAccount);
 		transaction.setTransactionType("transfer");
 		transaction.setDescription("Test Transaction");
+		transaction.setTimestamp(LocalDateTime.now());
 		transactionRepository.save(transaction);
+		
+		// Sending Email Notification to Sender
+		
+	    EmailDetails senderDetails = new EmailDetails();
+	    senderDetails.setMsgBody("Dear Customer,\n\nYour transfer of " + amount + " has been debited from your account.\n" +
+	            "New Balance: " + newSourceBalance + "\n\nThank you for banking with us!");
+	    senderDetails.setSubject("Fund Transfer - Debit Notification");
+	    senderDetails.setRecipient(srcAccount.getUser().getEmail());  
+
+	    sendMail(senderDetails);
+
+	    // Sending Email Notification to Receiver 
+	    
+	    EmailDetails receiverDetails = new EmailDetails();
+	    receiverDetails.setMsgBody("Dear Customer,\n\nYou have received a transfer of " + amount + " to your account.\n" +
+	            "New Balance: " + newTargetBalance + "\n\nThank you for banking with us!");
+	    receiverDetails.setSubject("Fund Transfer - Credit Notification");
+	    receiverDetails.setRecipient(destAccount.getUser().getEmail()); 
+
+	    sendMail(receiverDetails);
+		
 	}
 	
 	

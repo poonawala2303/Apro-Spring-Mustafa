@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aurionpro.banking.dto.AccountRequestDto;
 import com.aurionpro.banking.dto.AccountResponseDto;
 import com.aurionpro.banking.dto.PageResponse;
-import com.aurionpro.banking.entity.Account;
-import com.aurionpro.banking.entity.EmailDetails;
 import com.aurionpro.banking.service.AccountService;
 
 import jakarta.validation.Valid;
@@ -29,25 +27,25 @@ public class AccountController
 	@Autowired
 	private AccountService accountService;
 	
-	@PostMapping("/addaccount")
+	@PostMapping("/accounts")
 	public ResponseEntity<AccountResponseDto> addAccount(@RequestBody @Valid AccountRequestDto accountRequest)
 	{
 		return ResponseEntity.ok(accountService.addAccount(accountRequest));
 	}
 	
-	@GetMapping("/getaccount")
+	@GetMapping("/accounts")
 	public ResponseEntity<PageResponse<AccountResponseDto>> getAllAccounts(@RequestParam int pageSize , @RequestParam int pageNumber)
 	{
 		return ResponseEntity.ok(accountService.getAllAccounts(pageSize, pageNumber));
 	}
 	
-	@GetMapping("/getaccount/{id}")
+	@GetMapping("/accounts/{id}")
 	public ResponseEntity<AccountResponseDto> getAccountById(@PathVariable int id) throws AccountNotFoundException
 	{
 		return ResponseEntity.ok(accountService.getAccountById(id));
 	}
 	
-	@DeleteMapping("/deleteaccount/{id}")
+	@DeleteMapping("/accounts/{id}")
 	public ResponseEntity<String> deleteAccount(@PathVariable int id) throws AccountNotFoundException
 	{
 		accountService.deleteAccount(id);
@@ -55,31 +53,32 @@ public class AccountController
 		return ResponseEntity.ok("Account with id " + id + " deleted successfully");
 	}
 	
-	 @PostMapping("/deposit/{id}")
-	 public ResponseEntity<AccountResponseDto> cashDeposit(@PathVariable int id,@RequestParam double amount) throws AccountNotFoundException
-	 {
-		 return ResponseEntity.ok(accountService.cashDeposit(id, amount));
-	 }
+	@PostMapping("/deposit/{id}")
+	public ResponseEntity<AccountResponseDto> cashDeposit(@PathVariable int id,@RequestParam double amount) throws AccountNotFoundException
+	{
+		return ResponseEntity.ok(accountService.cashDeposit(id, amount));
+	}
 	 
-	 @PostMapping("/withdraw/{id}")
-	 public ResponseEntity<AccountResponseDto> cashWithdrawl(@PathVariable int id,@RequestParam double amount) throws AccountNotFoundException
-	 {
-		 return ResponseEntity.ok(accountService.cashWithdrawl(id, amount));
-	 }
+	@PostMapping("/withdraw/{id}")
+	public ResponseEntity<AccountResponseDto> cashWithdrawl(@PathVariable int id,@RequestParam double amount) throws AccountNotFoundException
+	{
+		return ResponseEntity.ok(accountService.cashWithdrawl(id, amount));
+	}
 	 
-	 @PostMapping("fundTransfer/{srcAccId}/to/{destAccId}")
-	 public ResponseEntity<String> fundTransfer(@PathVariable int srcAccId , @PathVariable int destAccId , @RequestParam double amount) throws AccountNotFoundException
-	 {
-		 accountService.fundTransfer(srcAccId, destAccId, amount);
+	@PostMapping("/accounts/{srcAccId}/{destAccId}")
+	public ResponseEntity<String> fundTransfer(@PathVariable int srcAccId , @PathVariable int destAccId , @RequestParam double amount) throws AccountNotFoundException
+	{
+		accountService.fundTransfer(srcAccId, destAccId, amount);
 		 
-		 return ResponseEntity.ok("Fund Transfer Successfull");
-	 }
+		return ResponseEntity.ok("Fund Transfer Successfull");
+	}
 	 
-	 @PostMapping("/sendMail")
-	 public ResponseEntity<String> sendMail(@RequestBody EmailDetails details)
-	    {
-	        String status= accountService.sendMail(details);
-
-	        return ResponseEntity.ok("Mail sent");
-	    }
+//	@PostMapping("/sendMail")
+//	public ResponseEntity<String> sendMail(@RequestBody EmailDetails details)
+//	{
+//	    accountService.sendMail(details);
+//
+//	    return ResponseEntity.ok("Mail sent");
+//	}
+	
 }

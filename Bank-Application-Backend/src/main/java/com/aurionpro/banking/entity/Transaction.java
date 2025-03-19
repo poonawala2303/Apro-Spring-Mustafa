@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -25,12 +26,14 @@ public class Transaction
 	@Column
 	private int id;
 	
-    @Column(name="sender_accno")
-    private String senderAccno;
+	@ManyToOne
+    @JoinColumn(name="sender_account_id")
+    private Account senderAccount;
 
-    @Column(name="reciever_accno")
-    private String receiverAccno;
-	
+    @ManyToOne
+    @JoinColumn(name="receiver_account_id")
+    private Account receiverAccount;	
+    
 	@Column(name="amount")
     private double amount;
 
@@ -42,5 +45,8 @@ public class Transaction
     
 	@Column(name="timestamp")
     private LocalDateTime timestamp;
+	
+	@Column(name="is_deleted")
+    private Boolean isDeleted = false;
 	
 }
